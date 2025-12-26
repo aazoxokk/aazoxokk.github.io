@@ -38,7 +38,7 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(120px);
-            opacity: 0.1; /* Zwiększona widoczność poświaty */
+            opacity: 0.1;
             z-index: -1;
             animation: pulse-orb 15s infinite alternate;
         }
@@ -51,9 +51,9 @@
         .floating-code {
             position: absolute;
             font-family: 'Fira Code', monospace;
-            font-size: 13px; /* Nieco większe */
+            font-size: 13px;
             color: var(--primary);
-            opacity: 0.35; /* Bardziej widoczne tło kodu */
+            opacity: 0.35;
             white-space: nowrap;
             pointer-events: none;
             user-select: none;
@@ -186,6 +186,12 @@
             animation: bounce 1.2s infinite ease-in-out;
         }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        
+        /* Obsługa pogrubionego tekstu w bot messasge */
+        .bot-text b {
+            color: white;
+            font-weight: 800;
+        }
     </style>
 </head>
 <body class="custom-scrollbar">
@@ -238,8 +244,8 @@
                     <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/20">
                         <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
-                    <h3 class="text-2xl font-black mb-4">Java Performance</h3>
-                    <p class="text-gray-500 leading-relaxed">Zaawansowane systemy oparte na Paper API. Optymalizacja pod kątem TPS i niskiego zużycia zasobów.</p>
+                    <h3 class="text-2xl font-black mb-4">Pełna Optymalizacja</h3>
+                    <p class="text-gray-500 leading-relaxed">Twoje skrypty będą działać bez lagów. Skupiam się na czystości kodu i niskim zużyciu RAM.</p>
                 </div>
                 <div class="card-glass p-10 rounded-[40px]">
                     <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/20">
@@ -271,7 +277,7 @@
         </div>
 
         <div class="pb-10 text-gray-800 font-mono text-[9px] uppercase tracking-[0.5em]">
-            AazCreator // Build 5.5 // No Payments Accepted
+            AazCreator // Build 5.7 // Sigma Skripting
         </div>
     </section>
 
@@ -285,7 +291,7 @@
                 </button>
                 <div class="h-8 w-px bg-white/10"></div>
                 <div>
-                    <h3 class="font-black text-sm tracking-tight">KONSOLA ZLECEŃ: <span class="text-emerald-400">AAZ_CORE</span></h3>
+                    <h3 class="font-black text-sm tracking-tight">KONSOLA ZLECEŃ: <span class="text-emerald-400">SIGMA_VIBES</span></h3>
                 </div>
             </div>
         </header>
@@ -295,11 +301,11 @@
                 <div class="message-bot p-10 rounded-[32px] max-w-2xl">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-10 bg-[#00ff88] rounded-xl flex items-center justify-center text-black font-black text-sm">AZ</div>
-                        <span class="text-xs font-black tracking-widest text-[#00ff88]">SYSTEM STATUS: ONLINE</span>
+                        <span class="text-xs font-black tracking-widest text-[#00ff88]">CORE READY</span>
                     </div>
                     <div class="text-sm leading-relaxed text-gray-300 space-y-4">
-                        <p>Inicjalizacja środowiska <span class="text-white font-bold">AazCreator</span> zakończona powodzeniem.</p>
-                        <p>Opisz swój projekt, a ja przygotuję kod całkowicie za darmo.</p>
+                        <p>Yo! AazCreator wchodzi na serwer. <b>Wszystko free, zero lagów, czysty Skript.</b></p>
+                        <p>Jeśli nawijasz po ziomalsku, ja też będę. Opisz co tam chcesz zakodować, byczku.</p>
                     </div>
                 </div>
             </div>
@@ -309,13 +315,13 @@
                     <textarea 
                         id="user-input"
                         rows="2"
-                        placeholder="Napisz, co mam dla Ciebie zakodować..."
+                        placeholder="Napisz siemano albo co potrzebujesz..."
                         class="w-full bg-transparent border-none resize-none px-6 py-4 text-sm focus:outline-none placeholder:text-gray-800 font-medium text-gray-200"
                     ></textarea>
                     <div class="flex justify-between items-center px-6 pb-2 pt-2 border-t border-white/5">
                         <div class="flex gap-4 items-center">
                             <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            <span class="text-[8px] font-bold text-gray-600 uppercase tracking-widest">Szyfrowany terminal AazCore</span>
+                            <span class="text-[8px] font-bold text-gray-600 uppercase tracking-widest">AazCore Node: Active</span>
                         </div>
                         <button 
                             onclick="handleChat()"
@@ -329,38 +335,28 @@
         </div>
     </section>
 
-    <!-- Powiadomienie o kopiowaniu -->
     <div id="copy-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-emerald-500 text-black font-black px-8 py-3 rounded-full text-xs tracking-widest opacity-0 transition-opacity pointer-events-none z-[2000]">
         KOD SKOPIOWANY DO SCHOWKA
     </div>
 
     <script>
         const apiKey = ""; 
-        const systemPrompt = "Jesteś AazCreator, elitarny programista Minecraft. \n\n" +
-                             "TWOJE NIEPODWAŻALNE ZASADY:\n" +
-                             "1. WSZYSTKO JEST ZA DARMO (0 PLN). Nigdy nie bierz pieniędzy.\n" +
-                             "2. SKRIPT GUI: Tylko czysty Skript (NATIVE).\n" +
-                             "3. JEŻELI UŻYTKOWNIK ZAPYTA O SKRIPT.JAR LUB SILNIK SKRIPT:\n" +
-                             "   - Napisz: 'Oto najnowsza wersja silnika Skript (2.13.2), która zapewni Ci stabilność i pełne wsparcie dla mechanik Native.'.\n" +
-                             "   - NA KOŃCU WIADOMOŚCI DODAJ ZNACZNIK: [ATTACHMENT_SKRIPT_JAR]\n" +
-                             "4. JEŻELI UŻYTKOWNIK PYTA JAK WKLEIĆ PLUGIN / SKRIPT:\n" +
-                             "   - Plugin (.jar): Wgraj do folderu /plugins/ i zrestartuj serwer.\n" +
-                             "   - Skrypt (.sk): Wgraj do folderu /plugins/Skript/scripts/ i wpisz w konsoli /sk reload <nazwa_pliku>.\n" +
-                             "5. STYL: Profesjonalny terminal, konkretne odpowiedzi techniczne.";
+        const systemPrompt = `Jesteś AazCreator, elitarny programista Minecraft i totalny sigma. 
+TWOJA OSOBOWOŚĆ:
+- Jeśli użytkownik pisze oficjalnie, Ty też.
+- Jeśli użytkownik pisze luźno/koleżeńsko (np. "siemano", "yo", "mordo"), Ty odpowiadasz w stylu memowym, koleżeńskim i sigma. Używaj słów jak "sigma", "byczku", "mordo", "gigachad", ale zachowaj profesjonalizm w kodzie.
+- Jesteś dumnym twórcą skryptów, nie piszesz pluginów (.jar). Skript to Twój świat.
+
+TWOJE ZASADY:
+1. WSZYSTKO ZA DARMO (0 PLN).
+2. KOD: Tylko Skript (.sk). Żadnej Javy.
+3. GUI: Tylko Native Skript.
+4. ZAŁĄCZNIKI: Jeśli trzeba silnika, daj [ATTACHMENT_SKRIPT_JAR].`;
 
         let chatHistory = [];
 
         function createFloatingCode() {
-            const snippets = [
-                "set slot 0 of player to stone", 
-                "on death of player:", 
-                "cancel event", 
-                "open chest with 3 rows", 
-                "give 1 diamond to player",
-                "on mine of stone:",
-                "set {balance::%player%} to 100",
-                "send \"&aSuccess!\" to player"
-            ];
+            const snippets = ["on join:", "cancel event", "open chest", "give 1 diamond", "set {v::%player%} to 1"];
             const container = document.getElementById('particles-container');
             const snippet = snippets[Math.floor(Math.random() * snippets.length)];
             const el = document.createElement('div');
@@ -368,23 +364,21 @@
             el.innerText = snippet;
             el.style.left = Math.random() * 95 + 'vw';
             el.style.top = '100vh';
-            el.style.animationDuration = (Math.random() * 10 + 10) + 's'; // Szybsze pływanie
+            el.style.animationDuration = (Math.random() * 10 + 10) + 's';
             container.appendChild(el);
             setTimeout(() => el.remove(), 25000);
         }
-        setInterval(createFloatingCode, 800); // Częstsze generowanie
+        setInterval(createFloatingCode, 800);
 
         function copySnippet(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            try {
-                document.execCommand('copy');
-                const toast = document.getElementById('copy-toast');
-                toast.style.opacity = '1';
-                setTimeout(() => toast.style.opacity = '0', 2000);
-            } catch (err) {}
+            document.execCommand('copy');
+            const toast = document.getElementById('copy-toast');
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 2000);
             document.body.removeChild(textArea);
         }
 
@@ -425,19 +419,38 @@
                 appendMessage(text, 'bot');
             } catch (e) {
                 removeLoading(loadingId);
-                appendMessage("CRITICAL FAILURE: Remote core disconnected.", 'bot');
+                appendMessage("CORE ERROR: Connection lost.", 'bot');
             }
+        }
+
+        function formatMarkdown(text) {
+            // Zamiana ** na pogrubienie <b>
+            text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            // Zamiana * na kursywę <i>
+            text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            return text;
         }
 
         function appendMessage(text, role) {
             const div = document.createElement('div');
             div.className = role === 'user' ? 'message-user p-6 rounded-2xl max-w-xl self-end' : 'message-bot p-10 rounded-[32px] max-w-2xl';
             
-            let htmlContent = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, p1, p2) => {
+            let processedText = text;
+
+            // Obsługa kodów (pre)
+            processedText = processedText.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, p1, p2) => {
                 return `<pre class="bg-black/80 p-6 rounded-xl my-6 font-mono text-[11px] text-emerald-400 border border-emerald-500/20 overflow-x-auto"><div class="text-[8px] text-gray-500 mb-3 uppercase tracking-widest font-bold">${p1 || 'code'}</div><code>${p2}</code></pre>`;
             });
 
-            if (htmlContent.includes("[ATTACHMENT_SKRIPT_JAR]")) {
+            // Formatowanie reszty tekstu
+            if (!processedText.includes('<pre>')) {
+                processedText = formatMarkdown(processedText);
+            } else {
+                const parts = processedText.split(/(<pre[\s\S]*?\/pre>)/);
+                processedText = parts.map(part => part.startsWith('<pre') ? part : formatMarkdown(part)).join('');
+            }
+
+            if (processedText.includes("[ATTACHMENT_SKRIPT_JAR]")) {
                 const attachment = `
                     <a href="https://github.com/SkriptLang/Skript/releases/download/2.13.2/Skript-2.13.2.jar" target="_blank" class="attachment-card">
                         <div class="attachment-icon">
@@ -448,16 +461,16 @@
                             <div class="text-[10px] text-emerald-400 uppercase tracking-widest font-black">Latest Stable Release</div>
                         </div>
                     </a>`;
-                htmlContent = htmlContent.replace("[ATTACHMENT_SKRIPT_JAR]", attachment);
+                processedText = processedText.replace("[ATTACHMENT_SKRIPT_JAR]", attachment);
             }
             
             if (role === 'bot') {
                 div.innerHTML = `
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 bg-[#00ff88] rounded-lg flex items-center justify-center text-black font-black text-[10px]">AZ</div>
-                        <span class="text-[10px] font-black tracking-widest text-[#00ff88]">AAZ_CREATOR</span>
+                        <span class="text-[10px] font-black tracking-widest text-[#00ff88]">AAZ_SIGMA_DEV</span>
                     </div>
-                    <div class="text-sm leading-relaxed text-gray-200">${htmlContent}</div>
+                    <div class="text-sm leading-relaxed text-gray-200 bot-text">${processedText.replace(/\n/g, '<br>')}</div>
                 `;
             } else {
                 div.innerHTML = `<p class="text-sm">${text}</p>`;
