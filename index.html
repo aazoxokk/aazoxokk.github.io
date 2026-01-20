@@ -213,6 +213,7 @@
                     
                     <div class="mt-16 flex flex-wrap gap-8 items-center">
                         <a href="#skills" class="bg-[#00ff41] text-black font-black px-12 py-5 rounded-xl hover:scale-110 hover:shadow-[0_0_35px_rgba(0,255,65,0.5)] transition-all uppercase tracking-widest">Moje Skille</a>
+                        
                         <div onclick="confirmExit()" class="flex items-center gap-6 bg-white/5 p-5 px-10 rounded-2xl border border-white/5 hover:border-[#5865F2] transition-all group cursor-pointer">
                             <i class="fab fa-discord text-4xl text-[#5865F2] group-hover:animate-spin transition-all"></i>
                             <div>
@@ -402,13 +403,12 @@
         window.addEventListener("scroll", reveal);
         reveal();
 
-        // Funkcja obsługująca okno Windows-style (confirm)
+        // Funkcja okna potwierdzenia (jak w Windowsie)
         function confirmExit() {
-            const response = confirm("Czy na pewno chcesz opuścić stronę?");
-            if (response) {
+            const userChoice = confirm("Czy na pewno chcesz opuścić stronę?");
+            if (userChoice) {
                 window.location.href = "https://dsc.gg/aazoxounicode";
             }
-            // Jeśli nie (Anuluj), nic się nie dzieje - okno się zamyka
         }
     </script>
 </body></html>
