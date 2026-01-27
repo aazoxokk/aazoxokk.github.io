@@ -74,6 +74,7 @@
         .news-prio-update { border-left: 6px solid var(--mpk-yellow); }
         .news-prio-info { border-left: 6px solid var(--mpk-blue); }
         .news-prio-critical { border-left: 6px solid #ef4444; } /* Red for maintenance */
+        .news-prio-transport { border-left: 6px solid #10b981; } /* Emerald for new lines */
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
@@ -174,13 +175,53 @@
                 </div>
                 <div class="h-px bg-slate-800 flex-grow mx-10 hidden md:block"></div>
                 <div class="text-slate-600 font-mono text-sm mt-4 md:mt-0">
-                    Ostatnia modyfikacja: 24.01.2026
+                    Ostatnia modyfikacja: 27.01.2026
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 
-                <!-- NOWA AKTUALNOŚĆ: PRZERWA TECHNICZNA BOTA -->
+                <!-- NOWA AKTUALNOŚĆ: LINIA 405 -->
+                <article class="card p-12 news-prio-transport flex flex-col group lg:col-span-2">
+                    <div class="flex justify-between items-start mb-10">
+                        <div class="flex gap-4">
+                            <span class="bg-emerald-500/10 text-emerald-500 text-[10px] font-black px-4 py-2 rounded-lg border border-emerald-500/20 uppercase tracking-widest">Nowe Połączenie</span>
+                            <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-lg uppercase tracking-widest">Linia 405</span>
+                        </div>
+                        <span class="text-slate-600 font-mono text-xs">27 STY 2026</span>
+                    </div>
+                    
+                    <h3 class="text-4xl font-black text-white mb-6 group-hover:text-emerald-500 transition-colors">Uruchomienie nowej linii: 405</h3>
+                    
+                    <div class="text-slate-400 leading-relaxed space-y-6 mb-8 text-lg">
+                        <p>Z radością ogłaszamy rozszerzenie siatki połączeń o nową, kluczową linię autobusową <strong class="text-white text-2xl">405</strong>. Połączenie to zostało zaprojektowane, aby usprawnić dojazd z północnych rejonów miasta do ścisłego centrum.</p>
+                        
+                        <div class="bg-black/30 p-8 rounded-2xl border border-white/5 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 p-4 opacity-10">
+                                <i class="fas fa-bus text-8xl"></i>
+                            </div>
+                            <h4 class="text-white font-bold mb-6 flex items-center gap-3">
+                                <i class="fas fa-map-marked-alt text-emerald-500"></i> Trasa Przejazdu:
+                            </h4>
+                            <div class="flex flex-col md:flex-row items-center gap-4 text-white font-black text-xl lg:text-2xl">
+                                <div class="bg-emerald-600 px-6 py-3 rounded-xl shadow-lg">Górka Narodowa P+R</div>
+                                <i class="fas fa-exchange-alt text-slate-600 hidden md:block"></i>
+                                <div class="bg-slate-700 px-6 py-3 rounded-xl shadow-lg">Dworzec Główny Zachód</div>
+                            </div>
+                            <p class="mt-6 text-sm text-slate-500 italic">Linia 405 będzie kursować ze zwiększoną częstotliwością w godzinach szczytu komunikacyjnego.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-8 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-xs text-slate-600 font-mono uppercase">Sprawdź rozkład na Discordzie</span>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-route text-emerald-700"></i>
+                            <span class="text-xs text-slate-600 italic">Dział Planowania Ruchu</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- AKTUALNOŚĆ: PRZERWA TECHNICZNA BOTA -->
                 <article class="card p-12 news-prio-critical flex flex-col group lg:col-span-2">
                     <div class="flex justify-between items-start mb-10">
                         <div class="flex gap-4">
@@ -190,42 +231,26 @@
                         <span class="text-slate-600 font-mono text-xs italic">Wiadomość z dnia: 24 STY 2026</span>
                     </div>
                     
-                    <h3 class="text-4xl font-black text-white mb-6 group-hover:text-red-500 transition-colors">Przerwa techniczna bota: 27.01 - 01.02</h3>
+                    <h3 class="text-3xl font-black text-white mb-6 group-hover:text-red-500 transition-colors">Przerwa techniczna bota: 27.01 - 01.02</h3>
                     
                     <div class="text-slate-400 leading-relaxed space-y-4 mb-8 text-lg">
-                        <p>Informujemy, że w związku z planowanym reworkiem infrastruktury serwerowej oraz migracją danych na nową platformę, nasz główny bot systemowy przejdzie w tryb offline w dniach <strong class="text-white">od 27 stycznia do 1 lutego 2026 roku.</strong></p>
+                        <p>Informujemy o trwającej migracji systemowej. Główny bot systemowy jest niedostępny <strong class="text-white">do 1 lutego 2026 roku.</strong></p>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                            <div class="bg-black/40 p-8 rounded-2xl border border-red-500/10">
-                                <h4 class="text-red-400 font-bold mb-4 flex items-center gap-2">
-                                    <i class="fas fa-times-circle"></i> Co będzie niedostępne?
-                                </h4>
-                                <ul class="space-y-2 text-sm text-slate-500">
-                                    <li>- Automatyczne nadawanie ról</li>
-                                    <li>- System zgłoszeń (Tickety)</li>
-                                    <li>- Reagowanie na komendy systemowe</li>
-                                    <li>- Statystyki pasażerów na żywo</li>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                            <div class="bg-black/40 p-6 rounded-2xl border border-red-500/10">
+                                <h4 class="text-red-400 font-bold mb-2 text-sm uppercase">Niedostępne:</h4>
+                                <ul class="space-y-1 text-xs text-slate-500">
+                                    <li>- Automatyczne role & Tickety</li>
+                                    <li>- Komendy systemowe & Statystyki</li>
                                 </ul>
                             </div>
-                            <div class="bg-black/40 p-8 rounded-2xl border border-green-500/10">
-                                <h4 class="text-green-400 font-bold mb-4 flex items-center gap-2">
-                                    <i class="fas fa-check-circle"></i> Co będzie działać?
-                                </h4>
-                                <ul class="space-y-2 text-sm text-slate-500">
-                                    <li>- Kanały dyskusyjne i głosowe</li>
-                                    <li>- Moderacja ręczna przez Administrację</li>
-                                    <li>- Dostęp do regulaminów i ogłoszeń</li>
-                                    <li>- Zaproszenia na serwer</li>
+                            <div class="bg-black/40 p-6 rounded-2xl border border-green-500/10">
+                                <h4 class="text-green-400 font-bold mb-2 text-sm uppercase">Działają:</h4>
+                                <ul class="space-y-1 text-xs text-slate-500">
+                                    <li>- Kanały dyskusyjne & Głosowe</li>
+                                    <li>- Moderacja ręczna</li>
                                 </ul>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto pt-8 border-t border-white/5 flex items-center justify-between">
-                        <span class="text-xs text-slate-600 font-mono uppercase">Zalecamy cierpliwość w trakcie prac</span>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-tools text-slate-700"></i>
-                            <span class="text-xs text-slate-600 italic">Dział Techniczny</span>
                         </div>
                     </div>
                 </article>
@@ -237,20 +262,15 @@
                         <span class="text-slate-600 font-mono text-xs">24 STY 2026</span>
                     </div>
                     
-                    <h3 class="text-3xl font-black text-white mb-6 group-hover:text-yellow-400 transition-colors">Robimy Rework Discorda</h3>
+                    <h3 class="text-2xl font-black text-white mb-6 group-hover:text-yellow-400 transition-colors">Robimy Rework Discorda</h3>
                     
-                    <div class="text-slate-400 leading-relaxed space-y-4 mb-8 text-lg">
-                        <p>Nasz oficjalny serwer przechodzi gruntowną metamorfozę. Zmieniamy wszystko od podstaw, aby zapewnić Wam najwyższą jakość interakcji.</p>
-                        
-                        <div class="bg-black/20 p-6 rounded-xl border border-white/5 space-y-2">
-                             <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 italic">Główne założenia:</p>
-                             <p class="text-sm italic">Nowa struktura kanałów, ulepszone role i pełna integracja z nowym botem, którego start planowany jest po przerwie technicznej.</p>
-                        </div>
+                    <div class="text-slate-400 leading-relaxed space-y-4 mb-8 text-sm italic">
+                        <p>Serwer przechodzi gruntowną metamorfozę. Nowa struktura kanałów i pełna integracja z nowym systemem bota po przerwie.</p>
                     </div>
 
                     <div class="mt-auto pt-8 border-t border-white/5 flex items-center justify-between">
                         <img src="https://cdn.discordapp.com/icons/1412413470292443178/3df900787fc9512be94fb0a833607cce" class="w-8 h-8 rounded-full border-2 border-slate-900" alt="Staff">
-                        <span class="text-xs text-slate-600 italic">Opublikowano przez: Zarząd MPK</span>
+                        <span class="text-[10px] text-slate-600 uppercase">Zarząd MPK</span>
                     </div>
                 </article>
 
@@ -261,14 +281,14 @@
                         <span class="text-slate-600 font-mono text-xs">20 STY 2026</span>
                     </div>
                     
-                    <h3 class="text-3xl font-black text-white mb-6 group-hover:text-blue-400 transition-colors">Optymalizacja Strony</h3>
+                    <h3 class="text-2xl font-black text-white mb-6 group-hover:text-blue-400 transition-colors">Optymalizacja Strony</h3>
                     
-                    <div class="text-slate-400 leading-relaxed mb-8 text-lg italic">
-                        <p>Wprowadziliśmy nowy interfejs w stylu Dark Mode. Usunęliśmy zbędne elementy graficzne, aby portal ładował się błyskawicznie na każdym łączu.</p>
+                    <div class="text-slate-400 leading-relaxed mb-8 text-sm italic">
+                        <p>Wprowadziliśmy nowy interfejs w stylu Dark Mode dla błyskawicznego ładowania na każdym urządzeniu.</p>
                     </div>
 
                     <div class="mt-auto pt-8 border-t border-white/5">
-                        <span class="text-xs text-slate-600 italic">Tagi: #performance #ui #ux</span>
+                        <span class="text-[10px] text-slate-600 uppercase tracking-widest">#performance #darkmode</span>
                     </div>
                 </article>
 
@@ -278,7 +298,6 @@
         <!-- DISCORD BANNER -->
         <section id="discord">
             <div class="relative rounded-[40px] bg-gradient-to-br from-[#5865F2] to-[#404eed] p-12 lg:p-24 overflow-hidden shadow-2xl discord-glow">
-                <!-- BG Decorations -->
                 <i class="fab fa-discord absolute -right-20 -bottom-20 text-[300px] text-white/10 rotate-[-15deg]"></i>
                 
                 <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -286,7 +305,7 @@
                         <img src="https://cdn.discordapp.com/icons/1412413470292443178/3df900787fc9512be94fb0a833607cce" class="w-32 h-32 rounded-3xl mb-10 mx-auto lg:mx-0 shadow-2xl border-4 border-white/20" alt="Discord Logo Large">
                         <h2 class="text-5xl lg:text-7xl font-black text-white mb-8 tracking-tighter italic">FIKCYJNE MPK KRAKÓW</h2>
                         <p class="text-blue-100 text-xl mb-12 max-w-xl font-medium opacity-90">
-                            Największa społeczność fanów komunikacji miejskiej w Polsce. Dołącz do nas już teraz, aby być na bieżąco z reworkiem serwera i nowymi projektami.
+                            Największa społeczność fanów komunikacji miejskiej w Polsce. Dołącz do nas już teraz!
                         </p>
                         <a href="https://dsc.gg/fikcyjnempkkrakow" target="_blank" class="inline-flex items-center gap-4 bg-white text-[#5865F2] px-12 py-6 rounded-2xl text-xl font-black hover:scale-105 transition-transform shadow-xl">
                             <i class="fab fa-discord"></i> WEJDŹ NA DSC.GG
@@ -319,8 +338,6 @@
         <section id="about" class="py-20 border-t border-slate-800">
             <div class="max-w-4xl mx-auto text-center lg:text-left">
                 <h2 class="text-5xl font-black text-white mb-10 tracking-tight text-center">Profesjonalne Podejście</h2>
-                <p class="text-slate-400 text-xl text-center mb-20">Fikcyjne MPK Kraków to nie tylko zabawa – to platforma, która łączy pasjonatów z całej Polski.</p>
-                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div class="flex flex-col items-center lg:items-start gap-6 bg-slate-800/30 p-10 rounded-[32px] border border-white/5">
                         <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-900/40">
@@ -328,7 +345,7 @@
                         </div>
                         <div>
                             <h4 class="text-2xl font-bold text-white mb-4">Stabilność i Rozwój</h4>
-                            <p class="text-slate-500 leading-relaxed text-lg">Nasz portal i serwer Discord to lata doświadczeń w tworzeniu społeczności. Dbamy o to, by każdy czuł się tu bezpiecznie i miał dostęp do najnowszych informacji technicznych.</p>
+                            <p class="text-slate-500 leading-relaxed text-sm">Nasz portal i serwer Discord to lata doświadczeń w tworzeniu społeczności. Dbamy o to, by każdy czuł się tu bezpiecznie.</p>
                         </div>
                     </div>
                     
@@ -338,7 +355,7 @@
                         </div>
                         <div>
                             <h4 class="text-2xl font-bold text-white mb-4">Otwarta Społeczność</h4>
-                            <p class="text-slate-500 leading-relaxed text-lg">Tworzymy to dla Was. Każda sugestia na Discordzie ma znaczenie i realnie wpływa na kierunek rozwoju projektu. Wspólnie budujemy najlepszą symulację w kraju.</p>
+                            <p class="text-slate-500 leading-relaxed text-sm">Tworzymy to dla Was. Każda sugestia na Discordzie ma znaczenie i realnie wpływa na kierunek rozwoju projektu.</p>
                         </div>
                     </div>
                 </div>
@@ -349,32 +366,31 @@
 
     <!-- FOOTER -->
     <footer class="bg-black py-32 border-t border-slate-900">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
             <div class="flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
                 <div class="max-w-md">
-                    <div class="flex items-center gap-4 mb-8">
+                    <div class="flex items-center gap-4 mb-8 justify-center md:justify-start">
                         <img src="https://cdn.discordapp.com/icons/1412413470292443178/3df900787fc9512be94fb0a833607cce" class="h-10 w-10 rounded-lg" alt="Footer Logo">
                         <span class="text-2xl font-black text-white tracking-tighter uppercase italic">MPK KRAKÓW</span>
                     </div>
-                    <p class="text-slate-500 text-lg leading-relaxed">
-                        Oficjalna strona internetowa społeczności fikcyjnego MPK Kraków. Projekt niepowiązany prawnie z faktycznym przewoźnikiem miejskim w Krakowie.
+                    <p class="text-slate-500 text-sm">
+                        Projekt niepowiązany prawnie z faktycznym przewoźnikiem miejskim w Krakowie. Created by Aazek.
                     </p>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-20">
+                <div class="grid grid-cols-2 gap-20 mx-auto md:mx-0">
                     <div>
-                        <h4 class="text-xs font-black text-white uppercase tracking-[5px] mb-8">Nawigacja</h4>
-                        <ul class="space-y-4 text-slate-500 font-bold text-sm">
+                        <h4 class="text-[10px] font-black text-white uppercase tracking-[5px] mb-8">Nawigacja</h4>
+                        <ul class="space-y-4 text-slate-500 font-bold text-xs">
                             <li><a href="#news" class="hover:text-yellow-400 transition-colors">Aktualności</a></li>
-                            <li><a href="#discord" class="hover:text-indigo-400 transition-colors">Serwer Discord</a></li>
-                            <li><a href="#about" class="hover:text-white transition-colors">O nas</a></li>
+                            <li><a href="#discord" class="hover:text-indigo-400 transition-colors">Discord</a></li>
                         </ul>
                     </div>
                     <div>
-                        <h4 class="text-xs font-black text-white uppercase tracking-[5px] mb-8">Status</h4>
+                        <h4 class="text-[10px] font-black text-white uppercase tracking-[5px] mb-8">Status</h4>
                         <div class="flex items-center gap-3">
                             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                            <span class="text-slate-400 font-mono text-xs">PORTAL_ONLINE: v3.1</span>
+                            <span class="text-slate-400 font-mono text-[10px]">VER 3.2_L405</span>
                         </div>
                     </div>
                 </div>
@@ -384,17 +400,11 @@
                 <p class="text-[9px] font-black text-slate-600 uppercase tracking-[4px]">
                     &copy; 2026 AAZEK DESIGNS. ALL RIGHTS RESERVED.
                 </p>
-                <div class="flex gap-8 text-slate-500 text-2xl">
-                    <a href="https://dsc.gg/fikcyjnempkkrakow" target="_blank" class="hover:text-indigo-400 transition-colors"><i class="fab fa-discord"></i></a>
-                    <i class="fab fa-github hover:text-white transition-colors cursor-pointer"></i>
-                    <i class="fab fa-instagram hover:text-pink-500 transition-colors cursor-pointer"></i>
-                </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // DARK MODE INTERACTION SYSTEM BY AAZEK
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -404,7 +414,6 @@
             });
         });
 
-        // Simple visibility observer for cards
         const observerOptions = { threshold: 0.1 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -420,7 +429,7 @@
             observer.observe(card);
         });
 
-        console.log("MPK Kraków Portal v3.1 - Dodano ogłoszenie o przerwie technicznej bota.");
+        console.log("MPK Kraków Portal v3.2 - Nowa linia 405 dodana.");
     </script>
 </body>
 </html>
