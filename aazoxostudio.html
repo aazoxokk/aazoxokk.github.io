@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aazoxo Studio Code | Skrypty nawet w kieszeni</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Fira+Code:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-strong: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #030408;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animated Background Blobs */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: move 25s infinite alternate ease-in-out;
+            opacity: 0.12;
+        }
+
+        @keyframes move {
+            from { transform: translate(-20%, -20%) scale(1); }
+            to { transform: translate(30%, 30%) scale(1.2) rotate(180deg); }
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+            transition: border-color 0.5s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Fix for Cursor Position (Zawias) */
+        #editor-container {
+            flex-grow: 1;
+            margin: 16px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3) !important;
+            /* Force subpixel antialiasing to fix cursor alignment */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .monaco-editor {
+            --vscode-editor-background: transparent !important;
+            --vscode-editorGutter-background: transparent !important;
+        }
+
+        .monaco-editor .inputarea.ime-input {
+            background-color: transparent !important;
+        }
+
+        /* Floating Editor View */
+        #editor-view {
+            width: 97vw;
+            height: 94vh;
+            display: flex;
+            flex-direction: column;
+            animation: emerge 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes emerge {
+            from { opacity: 0; transform: scale(0.98) translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        .glass-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            background: var(--glass-strong);
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow);
+        }
+
+        .hidden-view { display: none !important; }
+
+        .action-btn {
+            background: var(--glass-strong);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        select.glass-select {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            color: white;
+            border-radius: 10px;
+            padding: 6px 14px;
+            outline: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Custom Scrollbar for Liquid Glass */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--glass-border); 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--glass-strong); }
+    </style>
+</head>
+<body>
+
+    <!-- BACKGROUND EFFECTS -->
+    <div class="bg-blob w-[600px] h-[600px] bg-blue-600 top-[-200px] left-[-100px]"></div>
+    <div class="bg-blob w-[500px] h-[500px] bg-indigo-800 bottom-[-200px] right-[-100px]" style="animation-delay: -7s;"></div>
+
+    <!-- LANDING VIEW -->
+    <div id="landing-view" class="w-full max-w-6xl px-8 z-10 text-center">
+        <div class="glass-panel p-20">
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black tracking-[0.4em] mb-8 uppercase">
+                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
+                🧷 dsc.gg/aazoxounicode
+            </div>
+            <h1 class="text-9xl font-black mb-6 tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/20">
+                AAZ STUDIO
+            </h1>
+            <p class="text-gray-400 mb-20 text-xl font-medium tracking-tight max-w-3xl mx-auto leading-relaxed">
+                Posiadamy profesjonalny edytor kodu, w którym będzie ci się pisało komfortowo.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="glass-card p-12 cursor-pointer group" onclick="openModal('format-modal')">
+                    <div class="w-20 h-20 bg-blue-600/10 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-8 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-inner">📄</div>
+                    <h3 class="font-extrabold text-2xl mb-3 text-white tracking-tight">Nowy Projekt</h3>
+                    <p class="text-sm text-gray-500 font-medium">Zacznij od czystej karty</p>
+                </div>
+                <div class="glass-card p-12 cursor-pointer group" onclick="triggerFileUpload()">
+                    <div class="w-20 h-20 bg-indigo-600/10 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-inner">📂</div>
+                    <h3 class="font-extrabold text-2xl mb-3 text-white tracking-tight">Otwórz Plik</h3>
+                    <p class="text-sm text-gray-500 font-medium">Importuj kod z dysku</p>
+                    <input type="file" id="file-upload-input" class="hidden" onchange="handleFileRead(event)">
+                </div>
+                <div class="glass-card p-12 cursor-pointer group" onclick="openModal('settings-modal')">
+                    <div class="w-20 h-20 bg-emerald-600/10 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500 shadow-inner">⚙️</div>
+                    <h3 class="font-extrabold text-2xl mb-3 text-white tracking-tight">Preferencje</h3>
+                    <p class="text-sm text-gray-500 font-medium">Personalizuj edytor</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: FORMAT SELECTION -->
+    <div id="format-modal" class="fixed inset-0 z-[60] bg-black/90 backdrop-blur-2xl hidden-view flex items-center justify-center p-6">
+        <div class="glass-panel p-16 max-w-3xl w-full border-blue-500/30">
+            <h2 class="text-5xl font-black mb-12 text-center tracking-tighter uppercase italic">Środowisko</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-5 mb-12">
+                <button onclick="confirmNewFile('javascript', 'js')" class="glass-card p-8 rounded-3xl font-bold hover:text-blue-400">JavaScript</button>
+                <button onclick="confirmNewFile('python', 'py')" class="glass-card p-8 rounded-3xl font-bold hover:text-yellow-400">Python</button>
+                <button onclick="confirmNewFile('java', 'java')" class="glass-card p-8 rounded-3xl font-bold hover:text-red-400">Java</button>
+                <button onclick="confirmNewFile('plaintext', 'sk')" class="glass-card p-8 rounded-3xl font-bold hover:text-green-400">Skript (.sk)</button>
+                <button onclick="confirmNewFile('html', 'html')" class="glass-card p-8 rounded-3xl font-bold hover:text-orange-400">HTML / CSS</button>
+                <button onclick="showCustomFormat()" class="glass-card p-8 rounded-3xl border-dashed border-gray-600 text-gray-500">Inny...</button>
+            </div>
+            
+            <div id="custom-format-input" class="hidden-view mb-8 animate-fade-in">
+                <div class="flex space-x-3">
+                    <input type="text" id="custom-ext" placeholder="np. cpp, php, go" class="flex-grow bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-blue-500 font-bold">
+                    <button onclick="confirmNewFile('plaintext', document.getElementById('custom-ext').value)" class="bg-blue-600 hover:bg-blue-500 px-8 rounded-2xl font-black text-white transition-all">UTWÓRZ</button>
+                </div>
+            </div>
+
+            <button onclick="closeModal('format-modal')" class="w-full text-gray-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.5em]">Anuluj</button>
+        </div>
+    </div>
+
+    <!-- MODAL: SETTINGS -->
+    <div id="settings-modal" class="fixed inset-0 z-[60] bg-black/90 backdrop-blur-2xl hidden-view flex items-center justify-center p-6">
+        <div class="glass-panel p-16 max-w-lg w-full">
+            <h2 class="text-4xl font-black mb-12 tracking-tight">STUDIO SETTINGS</h2>
+            <div class="space-y-10 mb-12">
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="text-white font-bold">Motyw Edytora</span>
+                        <span class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Wybierz schemat kolorów</span>
+                    </div>
+                    <select id="theme-select" class="glass-select" onchange="updateTheme()">
+                        <option value="vs-dark">Dark Obsidian</option>
+                        <option value="vs-light">Pure Light</option>
+                    </select>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="text-white font-bold">Minimapa</span>
+                        <span class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Szybki podgląd kodu</span>
+                    </div>
+                    <input type="checkbox" id="minimap-toggle" checked onchange="updateMinimap()" class="w-6 h-6 rounded bg-black border-white/10 accent-blue-600">
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="text-white font-bold">Zawijanie Wierszy</span>
+                        <span class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Dopasuj do szerokości</span>
+                    </div>
+                    <input type="checkbox" id="wordwrap-toggle" onchange="updateWordWrap()" class="w-6 h-6 rounded bg-black border-white/10 accent-blue-600">
+                </div>
+            </div>
+            <button onclick="closeModal('settings-modal')" class="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-2xl">ZAPISZ I ZAMKNIJ</button>
+        </div>
+    </div>
+
+    <!-- MAIN EDITOR (FLOATING PANEL) -->
+    <div id="editor-view" class="hidden-view z-20">
+        <div class="glass-panel h-full flex flex-col overflow-hidden">
+            <!-- Glass Header -->
+            <header class="h-24 flex items-center justify-between px-10 bg-white/[0.02] border-b border-white/10">
+                <div class="flex items-center space-x-10">
+                    <button onclick="safeExit()" class="group flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-2xl flex items-center justify-center font-black text-xl group-hover:scale-110 transition-transform shadow-lg shadow-blue-500/20">A</div>
+                        <div class="flex flex-col text-left">
+                            <span class="text-sm font-black uppercase tracking-tighter">Aazoxo Studio</span>
+                            <span class="text-[9px] text-blue-500 font-black uppercase tracking-[0.2em]">Liquid Glass v3.0</span>
+                        </div>
+                    </button>
+                    
+                    <div class="h-10 w-[1px] bg-white/10"></div>
+                    
+                    <div class="flex items-center space-x-6">
+                        <div class="relative group">
+                            <input type="text" id="filename-display" value="script" class="bg-transparent text-xl font-extrabold focus:outline-none border-b-2 border-transparent focus:border-blue-500 transition-all w-64 text-white placeholder-gray-700" oninput="markUnsaved()" placeholder="Nazwa pliku...">
+                            <div id="unsaved-indicator" class="absolute -right-6 top-2 w-3 h-3 bg-yellow-400 rounded-full hidden animate-pulse border-4 border-black/20"></div>
+                        </div>
+                        
+                        <select id="inline-ext-select" onchange="updateEditorLanguageFromHeader()" class="glass-select border-blue-500/30">
+                            <option value="javascript">.js</option>
+                            <option value="python">.py</option>
+                            <option value="java">.java</option>
+                            <option value="plaintext">.sk</option>
+                            <option value="html">.html</option>
+                            <option value="lua">.lua</option>
+                            <option value="cpp">.cpp</option>
+                            <option value="typescript">.ts</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <div class="flex bg-black/40 p-1.5 rounded-2xl border border-white/10">
+                        <button onclick="changeFontSize(1)" class="w-10 h-10 flex items-center justify-center hover:text-blue-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                        <div class="w-[1px] h-6 bg-white/10 my-auto"></div>
+                        <button onclick="changeFontSize(-1)" class="w-10 h-10 flex items-center justify-center hover:text-blue-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"/></svg>
+                        </button>
+                    </div>
+                    <button onclick="saveFile()" class="bg-white text-black hover:bg-blue-600 hover:text-white px-12 py-4 rounded-2xl text-xs font-black transition-all shadow-2xl active:scale-95 uppercase tracking-widest">
+                        Zapisz Projekt
+                    </button>
+                </div>
+            </header>
+
+            <!-- Monaco Container -->
+            <main id="editor-container"></main>
+            
+            <!-- Glass Footer -->
+            <footer class="h-12 bg-black/60 border-t border-white/5 px-10 flex items-center justify-between text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">
+                <div class="flex space-x-12">
+                    <span id="lang-status" class="text-blue-500 flex items-center">
+                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-3"></span>
+                        JAVASCRIPT
+                    </span>
+                    <span id="line-counter">Wiersze: 1</span>
+                    <span id="char-counter">Znaki: 0</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-emerald-500 flex items-center">
+                        <svg class="w-3 h-3 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                        Status: Gotowy
+                    </span>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        let editor;
+        let currentFontSize = 16;
+        let isSaved = true;
+        let resizeTimeout;
+
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
+
+        function initEditor(lang = 'javascript', content = '') {
+            if (editor) editor.dispose();
+            
+            require(['vs/editor/editor.main'], function() {
+                // Konfiguracja dla "Sigmy" - Naprawia kursor (zawias)
+                editor = monaco.editor.create(document.getElementById('editor-container'), {
+                    value: content || getStarterCode(lang),
+                    language: lang,
+                    theme: document.getElementById('theme-select').value,
+                    automaticLayout: false, 
+                    fontSize: currentFontSize,
+                    fontFamily: "'Fira Code', 'Courier New', monospace",
+                    fontWeight: "500",
+                    letterSpacing: 0,
+                    lineHeight: 24,
+                    minimap: { enabled: document.getElementById('minimap-toggle').checked },
+                    wordWrap: document.getElementById('wordwrap-toggle').checked ? 'on' : 'off',
+                    cursorSmoothCaretAnimation: "on",
+                    cursorBlinking: "expand",
+                    cursorWidth: 3,
+                    smoothScrolling: true,
+                    roundedSelection: true,
+                    renderLineHighlight: "all",
+                    padding: { top: 32, bottom: 32 },
+                    mouseWheelZoom: true,
+                    scrollbar: {
+                        verticalScrollbarSize: 10,
+                        horizontalScrollbarSize: 10,
+                        useShadows: false,
+                        verticalSliderSize: 6,
+                        horizontalSliderSize: 6
+                    }
+                });
+
+                editor.onDidChangeModelContent(() => {
+                    const model = editor.getModel();
+                    document.getElementById('line-counter').innerText = `Wiersze: ${model.getLineCount()}`;
+                    document.getElementById('char-counter').innerText = `Znaki: ${model.getValueLength()}`;
+                    markUnsaved();
+                });
+
+                // Precyzyjny ResizeObserver z requestAnimationFrame dla płynności
+                const observer = new ResizeObserver(() => {
+                    if (resizeTimeout) cancelAnimationFrame(resizeTimeout);
+                    resizeTimeout = requestAnimationFrame(() => {
+                        if (editor) editor.layout();
+                    });
+                });
+                observer.observe(document.getElementById('editor-container'));
+
+                isSaved = true;
+                updateUIStatus();
+            });
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden-view'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden-view'); }
+        function showCustomFormat() { document.getElementById('custom-format-input').classList.toggle('hidden-view'); }
+
+        function confirmNewFile(lang, ext) {
+            document.getElementById('landing-view').classList.add('hidden-view');
+            closeModal('format-modal');
+            document.getElementById('editor-view').classList.remove('hidden-view');
+            document.getElementById('inline-ext-select').value = lang;
+            document.getElementById('lang-status').innerHTML = `<span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-3"></span>${lang.toUpperCase()}`;
+            initEditor(lang);
+        }
+
+        function safeExit() {
+            if (!isSaved) {
+                const check = confirm("⚠️ UWAGA! Masz niezapisane zmiany.\nCzy na pewno chcesz porzucić postęp?");
+                if (!check) return;
+            }
+            document.getElementById('editor-view').classList.add('hidden-view');
+            document.getElementById('landing-view').classList.remove('hidden-view');
+            isSaved = true; 
+        }
+
+        function updateEditorLanguageFromHeader() {
+            const lang = document.getElementById('inline-ext-select').value;
+            const model = editor.getModel();
+            monaco.editor.setModelLanguage(model, lang);
+            document.getElementById('lang-status').innerHTML = `<span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-3"></span>${lang.toUpperCase()}`;
+            markUnsaved();
+        }
+
+        function triggerFileUpload() { document.getElementById('file-upload-input').click(); }
+
+        function handleFileRead(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const ext = file.name.split('.').pop();
+                const name = file.name.replace(`.${ext}`, '');
+                document.getElementById('filename-display').value = name;
+                
+                const langMap = { 'js':'javascript', 'py':'python', 'java':'java', 'sk':'plaintext', 'html':'html', 'css':'css', 'lua':'lua', 'ts':'typescript' };
+                const lang = langMap[ext] || 'plaintext';
+                
+                document.getElementById('landing-view').classList.add('hidden-view');
+                document.getElementById('editor-view').classList.remove('hidden-view');
+                document.getElementById('inline-ext-select').value = lang;
+                initEditor(lang, event.target.result);
+            };
+            reader.readAsText(file);
+        }
+
+        function saveFile() {
+            const code = editor.getValue();
+            const name = document.getElementById('filename-display').value;
+            const lang = document.getElementById('inline-ext-select').value;
+            const extMap = { 'javascript':'.js', 'python':'.py', 'java':'.java', 'plaintext':'.sk', 'html':'.html', 'lua':'.lua', 'cpp':'.cpp', 'typescript':'.ts' };
+            
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${name}${extMap[lang] || '.txt'}`;
+            a.click();
+            
+            isSaved = true;
+            updateUIStatus();
+        }
+
+        function markUnsaved() { isSaved = false; updateUIStatus(); }
+        function updateUIStatus() {
+            const dot = document.getElementById('unsaved-indicator');
+            isSaved ? dot.classList.add('hidden') : dot.classList.remove('hidden');
+        }
+
+        function updateTheme() { if(editor) monaco.editor.setTheme(document.getElementById('theme-select').value); }
+        function updateMinimap() { if(editor) editor.updateOptions({ minimap: { enabled: document.getElementById('minimap-toggle').checked } }); }
+        function updateWordWrap() { if(editor) editor.updateOptions({ wordWrap: document.getElementById('wordwrap-toggle').checked ? 'on' : 'off' }); }
+        function changeFontSize(d) { currentFontSize += d; editor.updateOptions({ fontSize: currentFontSize }); }
+
+        function getStarterCode(lang) {
+            const s = {
+                'javascript': '// Aazoxo Studio Code\nconsole.log("Status: Włączony");',
+                'python': '# Aazoxo Studio Code\nprint("Status: Włączony")',
+                'java': 'public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Status: Włączony");\n\t}\n}',
+                'plaintext': '# Skript Config\non join:\n\tsend "&b&lAazoxo &7Witaj w ekipie sigm!" to player',
+                'html': '<!DOCTYPE html>\n<html lang="pl">\n<head>\n\t<title>Aazoxo Unicode dsc.gg/aazoxounicode</title>\n</head>\n<body>\n\t<h1>Liquid Glass przejmuje strony xd</h1>\n</body>\n</html>'
+            };
+            return s[lang] || '// Zacznij pisać kod tutaj...';
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveFile(); }
+        });
+    </script>
+</body>
+</html>
